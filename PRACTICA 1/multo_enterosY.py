@@ -19,7 +19,7 @@ def multiplicacion_primaria(a:str, b:str) -> tuple:
             p1os = i + j
             p2os = i + j + 1
 
-            if resultado[p2os] > 0:
+            if resultado[p2os] != 0 or producto != 0:
                 conteo["sumas"] += 1
             
             suma = producto + resultado[p2os]
