@@ -55,6 +55,8 @@ int main() {
     printf("\nCantidad de sumas: %d\n", sumas);
     printf("Cantidad de multiplicaciones: %d\n", multiplicaciones);
 
+    system("pause");
+
     return 0;
 }
 

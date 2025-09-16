@@ -1,3 +1,6 @@
+from os import system
+
+
 def multiplicacion_primaria(a:str, b:str) -> tuple:
     n1 = [int(x) for x in a if x.isdigit()]
     n2 = [int(y) for y in b if y.isdigit()]
@@ -46,3 +49,4 @@ if __name__ == "__main__":
     print("Resultado:", resultado_calculado)
     print("Número de multiplicaciones:", total_operaciones["multiplicaciones"])
     print("Número de sumas:", total_operaciones["sumas"])
+    system("pause")
