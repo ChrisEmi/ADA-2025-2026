@@ -13,12 +13,12 @@ int busqueda_lineal(int arreglo[], int tam, int objetivo) {
 
 // --- 2. Implementacion de Busqueda Binaria ---
 int busqueda_binaria(int arreglo[], int tam, int objetivo) {
-    int bajo = 0, alto = tam - 1;
-    while (bajo <= alto) {
-        int medio = bajo + (alto - bajo) / 2;
-        if (arreglo[medio] == objetivo) return medio;
-        if (arreglo[medio] < objetivo) bajo = medio + 1;
-        else alto = medio - 1;
+    int izq = 0, der = tam - 1;
+    while (izq <= der) {
+        int mid = izq + (der - izq) / 2;
+        if (arreglo[mid] == objetivo) return mid;
+        if (arreglo[mid] < objetivo) izq = mid + 1;
+        else der = mid - 1;
     }
     return -1;
 }
@@ -43,15 +43,15 @@ void ordenamiento_burbuja(int arreglo[], int tam) {
     }
 }
 
-// --- 4. Implementacion de Ordenamiento por Mezcla ---
-void mezcla(int arreglo[], int izq, int medio, int der) {
-    int n1 = medio - izq + 1;
-    int n2 = der - medio;
+// --- 4. Implementacion de Ordenamiento por merge ---
+void merge(int arreglo[], int izq, int mid, int der) {
+    int n1 = mid - izq + 1;
+    int n2 = der - mid;
     int* I = (int*)malloc(n1 * sizeof(int));
     int* D = (int*)malloc(n2 * sizeof(int));
 
     for (int i = 0; i < n1; i++) I[i] = arreglo[izq + i];
-    for (int j = 0; j < n2; j++) D[j] = arreglo[medio + 1 + j];
+    for (int j = 0; j < n2; j++) D[j] = arreglo[mid + 1 + j];
 
     int i = 0, j = 0, k = izq;
     while (i < n1 && j < n2) {
@@ -64,12 +64,12 @@ void mezcla(int arreglo[], int izq, int medio, int der) {
     free(D);
 }
 
-void ordenamiento_mezcla(int arreglo[], int izq, int der) {
+void ordenamiento_merge(int arreglo[], int izq, int der) {
     if (izq < der) {
-        int medio = izq + (der - izq) / 2;
-        ordenamiento_mezcla(arreglo, izq, medio);
-        ordenamiento_mezcla(arreglo, medio + 1, der);
-        mezcla(arreglo, izq, medio, der);
+        int mid = izq + (der - izq) / 2;
+        ordenamiento_merge(arreglo, izq, mid);
+        ordenamiento_merge(arreglo, mid + 1, der);
+        merge(arreglo, izq, mid, der);
     }
 }
 
@@ -135,8 +135,8 @@ int main() {
         free(arreglo);
     }
 
-    // Pruebas Ordenamiento por Mezcla
-    printf("\n--- 4. Ordenamiento por Mezcla ---\n");
+    // Pruebas Ordenamiento por merge
+    printf("\n--- 4. Ordenamiento por merge ---\n");
     printf("| %-12s | %-15s | %-20s |\n", "Tamano (n)", "Tiempo (ms)", "Memoria Heap (KiB)");
     printf("|--------------|-----------------|----------------------|\n");
     for (int i = 0; i < 3; i++) {
@@ -144,7 +144,7 @@ int main() {
         int* arreglo = (int*)malloc(tam * sizeof(int));
         for (int j = 0; j < tam; j++) arreglo[j] = rand() % tam;
         clock_t inicio = clock();
-        ordenamiento_mezcla(arreglo, 0, tam - 1);
+        ordenamiento_merge(arreglo, 0, tam - 1);
         clock_t fin = clock();
         double tiempo_ms = ((double)(fin - inicio) / CLOCKS_PER_SEC) * 1000.0;
         printf("| %-12d | %-15.4f | %-20.4f |\n", tam, tiempo_ms, (double)(tam*sizeof(int))/1024.0);

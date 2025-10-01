@@ -20,15 +20,15 @@ def ejecutar_todas_las_pruebas_python():
 
     # --- 2. Implementacion de Busqueda Binaria ---
     def busqueda_binaria(arreglo, objetivo):
-        bajo, alto = 0, len(arreglo) - 1
-        while bajo <= alto:
-            medio = (bajo + alto) // 2
-            if arreglo[medio] == objetivo:
-                return medio
-            elif arreglo[medio] < objetivo:
-                bajo = medio + 1
+        izq, der = 0, len(arreglo) - 1
+        while izq <= der:
+            mid = (izq + der) // 2
+            if arreglo[mid] == objetivo:
+                return mid
+            elif arreglo[mid] < objetivo:
+                izq = mid + 1
             else:
-                alto = medio - 1
+                der = mid - 1
         return -1
 
     # --- 3. Implementacion de Ordenamiento Burbuja ---
@@ -44,15 +44,15 @@ def ejecutar_todas_las_pruebas_python():
                 break
         return arreglo
 
-    # --- 4. Implementacion de Ordenamiento por Mezcla ---
-    def ordenamiento_mezcla(arreglo):
+    # --- 4. Implementacion de Ordenamiento por merge ---
+    def ordenamiento_merge(arreglo):
         if len(arreglo) > 1:
-            medio = len(arreglo) // 2
-            izquierda = arreglo[:medio]
-            derecha = arreglo[medio:]
+            mid = len(arreglo) // 2
+            izquierda = arreglo[:mid]
+            derecha = arreglo[mid:]
             
-            ordenamiento_mezcla(izquierda)
-            ordenamiento_mezcla(derecha)
+            ordenamiento_merge(izquierda)
+            ordenamiento_merge(derecha)
             
             i = j = k = 0
             while i < len(izquierda) and j < len(derecha):
@@ -124,18 +124,18 @@ def ejecutar_todas_las_pruebas_python():
         tracemalloc.stop()
         print(f"{n:<15,} | {tiempo_transcurrido:<15.4f} | {pico / 1024:<20.4f}")
 
-    # Pruebas de Ordenamiento por Mezcla
-    print("\n--- 4. Ordenamiento por Mezcla ---")
+    # Pruebas de Ordenamiento por merge
+    print("\n--- 4. Ordenamiento por merge ---")
     print(f"{'Tamano (n)':<15} | {'Tiempo (ms)':<15} | {'Pico Memoria (KiB)':<20}")
     print("-" * 55)
     for n in [10**3, 10**4, 10**5]:
         arreglo = [random.randint(0, n) for _ in range(n)]
         inicio_tiempo = time.perf_counter()
-        ordenamiento_mezcla(arreglo.copy())
+        ordenamiento_merge(arreglo.copy())
         fin_tiempo = time.perf_counter()
         tiempo_transcurrido = (fin_tiempo - inicio_tiempo) * 1000
         tracemalloc.start()
-        ordenamiento_mezcla(arreglo.copy())
+        ordenamiento_merge(arreglo.copy())
         _, pico = tracemalloc.get_traced_memory()
         tracemalloc.stop()
         print(f"{n:<15,} | {tiempo_transcurrido:<15.4f} | {pico / 1024:<20.4f}")
