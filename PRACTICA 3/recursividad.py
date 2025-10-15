@@ -146,8 +146,8 @@ def potencia_recursiva(a, b, pila=None):
 
 def runner_demo():
     print("Ejecutando demostracion de funciones iterativas y recursivas\n")
-    print("\n{:<30} | {:<15} | {:<15} | {:<15}".format('Funcion', 'Modo', 'Tiempo (ms)', 'Mem. pico (KiB)'))
-    print('-'*85)
+
+    # 1) Suma de dígitos
     n = 123456789
     t0 = time.perf_counter()
     res_iter = suma_digitos_iterativa(n)
@@ -158,8 +158,12 @@ def runner_demo():
     t1r = time.perf_counter()
     cur, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
+    print("\n{:<30} | {:<15} | {:<15} | {:<15}".format('Funcion', 'Modo', 'Tiempo (ms)', 'Mem. pico (KiB)'))
+    print('_'*70)
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('suma_digitos', 'iterativa', (t1-t0)*1000, 0.0))
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('suma_digitos', 'recursiva', (t1r-t0r)*1000, peak/1024))
+
+    # 2) Invertir cadena
     s = 'hola mundo'
     t0 = time.perf_counter()
     res_iter = invertir_iterativa(s)
@@ -167,8 +171,12 @@ def runner_demo():
     t0r = time.perf_counter()
     res_rec = invertir_recursiva(s, pila=[])
     t1r = time.perf_counter()
+    print("\n{:<30} | {:<15} | {:<15} | {:<15}".format('Funcion', 'Modo', 'Tiempo (ms)', 'Mem. pico (KiB)'))
+    print('_'*70)
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('invertir_cadena', 'iterativa', (t1-t0)*1000, 0.0))
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('invertir_cadena', 'recursiva', (t1r-t0r)*1000, 0.0))
+
+    # 3) Búsqueda binaria
     arr = list(range(0, 1000))
     objetivo = 777
     t0 = time.perf_counter()
@@ -180,8 +188,12 @@ def runner_demo():
     t1r = time.perf_counter()
     cur, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
+    print("\n{:<30} | {:<15} | {:<15} | {:<15}".format('Funcion', 'Modo', 'Tiempo (ms)', 'Mem. pico (KiB)'))
+    print('_'*70)
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('busqueda_binaria', 'iterativa', (t1-t0)*1000, 0.0))
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('busqueda_binaria', 'recursiva', (t1r-t0r)*1000, peak/1024))
+
+    # 4) Potenciación
     a, b = 2, 20
     t0 = time.perf_counter()
     pot_iter = potencia_iterativa(a, b)
@@ -192,8 +204,11 @@ def runner_demo():
     t1r = time.perf_counter()
     cur, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
+    print("\n{:<30} | {:<15} | {:<15} | {:<15}".format('Funcion', 'Modo', 'Tiempo (ms)', 'Mem. pico (KiB)'))
+    print('_'*70)
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('potenciacion', 'iterativa', (t1-t0)*1000, 0.0))
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('potenciacion', 'recursiva', (t1r-t0r)*1000, peak/1024))
+
     print('\nResultados concretos:')
     print(f"suma_digitos(n={n}): iter={res_iter}, rec={res_rec}")
     print(f"invertir_cadena(s='{s}'): iter={res_iter!r}, rec={res_rec!r}")
@@ -203,3 +218,4 @@ def runner_demo():
 
 if __name__ == "__main__":
     runner_demo()
+
