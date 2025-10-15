@@ -34,11 +34,19 @@ def suma_digitos_iterativa(n):
 
 # recursiva con traza de pila
 def suma_digitos_recursiva(n, pila=None):
-    # versión recursiva sin trazas
+    if pila is None:
+        pila = []
+    pila.append(n)
+    print(f"Entrando: suma_digitos_recursiva({n}), pila: {pila}")
     n = abs(int(n))
     if n < 10:
+        print(f"Saliendo: suma_digitos_recursiva({n}) = {n}, pila: {pila}")
+        pila.pop()
         return n
-    return n % 10 + suma_digitos_recursiva(n // 10)
+    resultado = n % 10 + suma_digitos_recursiva(n // 10, pila)
+    print(f"Saliendo: suma_digitos_recursiva({n}) = {resultado}, pila: {pila}")
+    pila.pop()
+    return resultado
 
 # 2) Invertir cadena
 
@@ -47,10 +55,18 @@ def invertir_iterativa(s):
     return s[::-1]
 
 def invertir_recursiva(s, pila=None):
-    # versión recursiva sin trazas
+    if pila is None:
+        pila = []
+    pila.append(s)
+    print(f"Entrando: invertir_recursiva({s!r}), pila: {pila}")
     if s == "" or len(s) == 1:
+        print(f"Saliendo: invertir_recursiva({s!r}) = {s!r}, pila: {pila}")
+        pila.pop()
         return s
-    return invertir_recursiva(s[1:]) + s[0]
+    resultado = invertir_recursiva(s[1:], pila) + s[0]
+    print(f"Saliendo: invertir_recursiva({s!r}) = {resultado!r}, pila: {pila}")
+    pila.pop()
+    return resultado
 
 # 3) Busqueda binaria (iterativa y recursiva)
 @medir
@@ -68,18 +84,28 @@ def busqueda_binaria_iterativa(arr, objetivo):
     return -1
 
 def busqueda_binaria_recursiva(arr, objetivo, bajo=0, alto=None, pila=None):
-    # versión recursiva sin trazas
+    if pila is None:
+        pila = []
     if alto is None:
         alto = len(arr) - 1
+    pila.append((bajo, alto))
+    print(f"Entrando: busqueda_binaria_recursiva(bajo={bajo}, alto={alto}), pila: {pila}")
     if bajo > alto:
+        print(f"Saliendo: busqueda_binaria_recursiva(bajo={bajo}, alto={alto}) = -1, pila: {pila}")
+        pila.pop()
         return -1
     medio = (bajo + alto) // 2
     if arr[medio] == objetivo:
+        print(f"Saliendo: busqueda_binaria_recursiva(bajo={bajo}, alto={alto}) = {medio}, pila: {pila}")
+        pila.pop()
         return medio
     elif arr[medio] < objetivo:
-        return busqueda_binaria_recursiva(arr, objetivo, medio+1, alto)
+        resultado = busqueda_binaria_recursiva(arr, objetivo, medio+1, alto, pila)
     else:
-        return busqueda_binaria_recursiva(arr, objetivo, bajo, medio-1)
+        resultado = busqueda_binaria_recursiva(arr, objetivo, bajo, medio-1, pila)
+    print(f"Saliendo: busqueda_binaria_recursiva(bajo={bajo}, alto={alto}) = {resultado}, pila: {pila}")
+    pila.pop()
+    return resultado
 
 # 4) Potenciacion (iterativa y recursiva) - manejando exponentes enteros no negativos
 @medir
@@ -92,58 +118,57 @@ def potencia_iterativa(a, b):
     return res
 
 def potencia_recursiva(a, b, pila=None):
-    # versión recursiva sin trazas
+    if pila is None:
+        pila = []
+    pila.append(b)
+    print(f"Entrando: potencia_recursiva(a={a}, b={b}), pila: {pila}")
     a = float(a)
     b = int(b)
     if b == 0:
+        print(f"Saliendo: potencia_recursiva(a={a}, b={b}) = 1.0, pila: {pila}")
+        pila.pop()
         return 1.0
     if b == 1:
+        print(f"Saliendo: potencia_recursiva(a={a}, b={b}) = {a}, pila: {pila}")
+        pila.pop()
         return a
-    mitad = potencia_recursiva(a, b//2)
+    mitad = potencia_recursiva(a, b//2, pila)
     if b % 2 == 0:
-        return mitad * mitad
+        resultado = mitad * mitad
     else:
-        return mitad * mitad * a
+        resultado = mitad * mitad * a
+    print(f"Saliendo: potencia_recursiva(a={a}, b={b}) = {resultado}, pila: {pila}")
+    pila.pop()
+    return resultado
 
 
 # Runner que ejecuta cada implementacion, mide y muestra resultados
 
 def runner_demo():
     print("Ejecutando demostracion de funciones iterativas y recursivas\n")
-
-    # Cabecera tabla
     print("\n{:<30} | {:<15} | {:<15} | {:<15}".format('Funcion', 'Modo', 'Tiempo (ms)', 'Mem. pico (KiB)'))
     print('-'*85)
-
-    # 1 Suma de digitos
     n = 123456789
-    # iterativa
     t0 = time.perf_counter()
     res_iter = suma_digitos_iterativa(n)
     t1 = time.perf_counter()
-    # medir memoria para la recursiva por separado
     tracemalloc.start()
     t0r = time.perf_counter()
-    res_rec = suma_digitos_recursiva(n)
+    res_rec = suma_digitos_recursiva(n, pila=[])
     t1r = time.perf_counter()
     cur, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('suma_digitos', 'iterativa', (t1-t0)*1000, 0.0))
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('suma_digitos', 'recursiva', (t1r-t0r)*1000, peak/1024))
-
-    # 2 Invertir cadena
     s = 'hola mundo'
     t0 = time.perf_counter()
     res_iter = invertir_iterativa(s)
     t1 = time.perf_counter()
-    # recursiva (traza incluida, no mediremos memoria con tracemalloc para evitar mezclar trazas)
     t0r = time.perf_counter()
-    res_rec = invertir_recursiva(s)
+    res_rec = invertir_recursiva(s, pila=[])
     t1r = time.perf_counter()
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('invertir_cadena', 'iterativa', (t1-t0)*1000, 0.0))
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('invertir_cadena', 'recursiva', (t1r-t0r)*1000, 0.0))
-
-    # 3 Busqueda binaria
     arr = list(range(0, 1000))
     objetivo = 777
     t0 = time.perf_counter()
@@ -151,28 +176,24 @@ def runner_demo():
     t1 = time.perf_counter()
     tracemalloc.start()
     t0r = time.perf_counter()
-    idx_rec = busqueda_binaria_recursiva(arr, objetivo)
+    idx_rec = busqueda_binaria_recursiva(arr, objetivo, pila=[])
     t1r = time.perf_counter()
     cur, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('busqueda_binaria', 'iterativa', (t1-t0)*1000, 0.0))
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('busqueda_binaria', 'recursiva', (t1r-t0r)*1000, peak/1024))
-
-    # 4 Potenciacion
     a, b = 2, 20
     t0 = time.perf_counter()
     pot_iter = potencia_iterativa(a, b)
     t1 = time.perf_counter()
     tracemalloc.start()
     t0r = time.perf_counter()
-    pot_rec = potencia_recursiva(a, b)
+    pot_rec = potencia_recursiva(a, b, pila=[])
     t1r = time.perf_counter()
     cur, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('potenciacion', 'iterativa', (t1-t0)*1000, 0.0))
     print('{:<30} | {:<15} | {:<15.6f} | {:<15.3f}'.format('potenciacion', 'recursiva', (t1r-t0r)*1000, peak/1024))
-
-    # Mostrar resultados finales (resumen)
     print('\nResultados concretos:')
     print(f"suma_digitos(n={n}): iter={res_iter}, rec={res_rec}")
     print(f"invertir_cadena(s='{s}'): iter={res_iter!r}, rec={res_rec!r}")
