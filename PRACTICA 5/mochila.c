@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include<math.h>
+#include <time.h>
 #define MOCHILA_ARTICULOS 300
 
 
@@ -63,6 +64,7 @@ int main(int argc, char *argv[]) {
 
     printf("Ingrese la cantidad de valores la mochila: ");
     scanf("%d", &n_articulos);
+    srand(time(NULL));
 
     int pesos[n_articulos];
     int costos[n_articulos];
